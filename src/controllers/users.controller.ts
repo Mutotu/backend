@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
-import { hashPassword } from '../lib/helperFuncs'
+import { hashPassword, unhashPassword, createToken } from '../lib/helperFuncs'
+
 
 const UsersController = {
 
@@ -31,6 +32,38 @@ const UsersController = {
           return res.status(401).json({ error })
         }
       },
+
+      async loginUser(req: Request, res: Response, next: NextFunction) {
+        try {
+          const { email, password } = req.body
+          if (email === undefined || password === undefined) {
+            throw new Error('Missing parameters: username or password')
+          }
+          const record = await User.findByEmail(email)
+          const recordPass = record?.password
+          if (!recordPass) {
+            res.status(401).json({ error: 'Authentication error' })
+            return
+          }
+          const auth = unhashPassword(password, recordPass)
+          if (!auth) {
+            res.status(401).json({ error: 'Authentication error' })
+            return
+          }
+          const token = createToken(record?.id)
+          const filteredRecord = {
+            id: record?.id,
+            name: record?.name,
+            email: record?.email,
+            userItems: record?.userItems,
+            token,
+          }
+          res.status(201).json(filteredRecord)
+        } catch (error) {
+          next(error)
+        }
+      },
+    
 }
 
 export default UsersController
