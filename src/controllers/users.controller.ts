@@ -7,13 +7,13 @@ const UsersController = {
 
     async createUser(req: Request, res: Response, next: NextFunction) {
         try {
-          const { name, email, password } = req.body
+          const { name, email, password, photo } = req.body
           if (email === undefined || password === undefined || name  === undefined) {
             throw new Error('Missing parameters: username or password or name')
           }
           const hashedPassword = hashPassword(password)
-          const user = await User.create(name, email, hashedPassword)
-          res.status(201).json({ id: user.id, name: user.name, email: user.email })
+          const user = await User.create(name, email, hashedPassword, photo)
+          res.status(201).json({ id: user.id, name: user.name, email: user.email, photo: user.photo })
         return
         } catch (e) {
           next(e)
@@ -55,7 +55,8 @@ const UsersController = {
             id: record?.id,
             name: record?.name,
             email: record?.email,
-            userItems: record?.userItems,
+            photo: record?.photo,
+            carts: record?.carts,
             token,
           }
           res.status(201).json(filteredRecord)

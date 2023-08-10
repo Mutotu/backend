@@ -1,6 +1,7 @@
-// import { Prisma } from '@prisma/client'
 import prisma from '../lib/prisma'
-import UserItems from "./UserItems"
+import CartItem from "./CartItem"
+// import { Prisma } from '@prisma/client';
+// as Prisma.UsersCreateInput,
 
 class User {
     constructor(
@@ -8,45 +9,47 @@ class User {
       public name: string,
       public email: string,
       readonly password?: string,
-      public userItems?: Array<Partial<UserItems>> 
+      public photo?: string,
+      public carts?: Array<Partial<CartItem>> 
     ) {}
     
-    static async create(name:string, email:string, password:string){
+    static async create(name:string, email:string, password:string, photo: string){
         const { id } = await prisma.users.create({
             data: {
               name,
               email,
               password,
-            } ,
+              photo,
+            } 
           })
-          return new User(id, name, email, password)
+          return new User(id, name, email, password, photo )
     }
     static async findById(id: number): Promise<User | null> {
         const record = await prisma.users.findUnique({
           where: { id },
           include: {
-            userItems: true
-          },
+            carts: true
+          } 
         })
         if (record === null) {
           throw new Error('User does not exist.')
         }
-        const { name, email, userItems } = record
-        return new User(id, name, email, undefined,userItems)
+        const { name, email, photo, carts } = record
+        return new User(id, name, email, undefined, photo, carts)
       }
 
     static async findByEmail(email: string): Promise<User | null> {
         const record = await prisma.users.findUnique({
           where: { email },
           include: {
-          userItems: true
+            carts: true
           },
         })
         if (record === null) {
           throw new Error('User does not exist.')
         }
-        const { id, name, password, userItems } = record
-        return new User(id, name, email ,password, userItems)
+        const { id, name, password, photo, carts } = record
+        return new User(id, name, email ,password, photo, carts)
       }
 }
 

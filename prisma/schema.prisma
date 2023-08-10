@@ -12,25 +12,37 @@ model Users {
   name      String
   email     String      @unique
   password  String
+  photo     String
   createdAt DateTime    @default(now())
-  userItems UserItems[]
+  carts     Cart[]
 }
 
-model UserItems {
-  id           Int        @id @default(autoincrement())
-  userId       Int
-  itemsEvent   ItemsEvent @relation(fields: [itemsEventId], references: [id])
-  itemsEventId Int
-  createdAt    DateTime   @default(now())
-  users        Users      @relation(fields: [userId], references: [id])
-}
-
-model ItemsEvent {
+model Cart {
   id        Int         @id @default(autoincrement())
-  itemId    Int
-  name      String
-  category  String
-  price     String
-  createdAt DateTime    @default(now())
-  userItems UserItems[]
+  userId    Int
+  savedAt   DateTime    @default(now())
+  user      Users       @relation(fields: [userId], references: [id])
+  cartItems CartItem[]
+}
+
+model CartItem {
+  id         Int         @id @default(autoincrement())
+  quantity   Int
+  createdAt  DateTime    @default(now())
+  extraDetail String
+  cartItemId Int
+  cart       Cart        @relation(fields: [cartItemId], references: [id])
+  productId   Int?      
+  product     Product?  @relation(fields: [productId], references: [id])
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String
+  price       String
+  photoLink   String
+  discount    String
+  category    String
+  createdAt   DateTime    @default(now())
+  cartItems   CartItem[]
 }
