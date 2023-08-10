@@ -19,6 +19,17 @@ const UsersController = {
           next(e)
         }
       },
+    
+      async getProductsInCart(req: Request, res: Response, next: NextFunction){
+        try {
+          const { id } = req.body
+          const products = User.getProductsInCart(id)
+          products.then(response => res.status(201).json(response))
+          return
+        } catch (error) {
+          next(error)
+        }
+      },
 
       async loginMe(req: Request, res: Response) {
         try {

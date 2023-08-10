@@ -31,7 +31,7 @@ model CartItem {
   createdAt  DateTime    @default(now())
   extraDetail String
   cartItemId Int
-  cart       Cart        @relation(fields: [cartItemId], references: [id])
+  cart       Cart?        @relation(fields: [cartItemId], references: [id])
   productId   Int?      
   product     Product?  @relation(fields: [productId], references: [id])
 }

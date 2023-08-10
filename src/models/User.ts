@@ -1,7 +1,7 @@
 import prisma from '../lib/prisma'
-import CartItem from "./CartItem"
-// import { Prisma } from '@prisma/client';
-// as Prisma.UsersCreateInput,
+import Carts from "./Carts"
+import Product from './Product';
+
 
 class User {
     constructor(
@@ -10,7 +10,7 @@ class User {
       public email: string,
       readonly password?: string,
       public photo?: string,
-      public carts?: Array<Partial<CartItem>> 
+      public carts?: Array<Partial<Carts>> 
     ) {}
     
     static async create(name:string, email:string, password:string, photo: string){
@@ -25,18 +25,43 @@ class User {
           return new User(id, name, email, password, photo )
     }
     static async findById(id: number): Promise<User | null> {
-        const record = await prisma.users.findUnique({
-          where: { id },
-          include: {
-            carts: true
-          } 
-        })
-        if (record === null) {
-          throw new Error('User does not exist.')
+      const record = await prisma.users.findUnique({
+        where: { id },
+        include: {
+          carts: {
+            include: {
+              cartItems: {
+                include: {
+                  product: true ,
+                },
+              }
+            }
+          }
+        } 
+      });
+      if (record === null) {
+              throw new Error('User does not exist.')
+            }
+            const { name, email, photo, carts } = record
+            return new User(id, name, email, undefined, photo, carts)
+          }
+
+    static async getProductsInCart(id: number): Promise<Product[]> {
+            const cartItems = await prisma.product.findMany({
+                where: { id },
+                include:{
+                  cartItems:{
+                  include: {
+                    product: true
+                  }
+                }
+              }
+              }
+            )
+            
+            const products: Product[] = cartItems.map(cartItem => cartItem);
+            return products;
         }
-        const { name, email, photo, carts } = record
-        return new User(id, name, email, undefined, photo, carts)
-      }
 
     static async findByEmail(email: string): Promise<User | null> {
         const record = await prisma.users.findUnique({
