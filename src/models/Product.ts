@@ -21,9 +21,15 @@ class Product {
             category
                 } 
             }as any)
-            console.log(id)
             return new Product(id, name,price, photoLink, discount, category )
       }
+    
+    static async getAllProducts(){
+        const products = await prisma.product.findMany()
+        return products
+    }
+    
+    
 }
 
 export default Product

@@ -15,5 +15,6 @@ router.post('/products', CartItemsController.createCart)
 router.post('/products/item', ProductController.createProduct)
 router.post('/products/carts', Carts.createCart)
 router.get('/products', UsersController.getProductsInCart)
+router.get('/products/items', ProductController.getAllProducts)
 
 export default router
