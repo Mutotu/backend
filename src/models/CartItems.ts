@@ -23,11 +23,10 @@ class CartItems {
                 },
                 product: {
                     connect: { id: productId },
-                }
-                       
+                }                     
             } 
-          } as any)
-          return new CartItems(id, quantity ,extraDetail, cartItemId, undefined, productId,product  )
+                } as any)
+            return new CartItems(id, quantity ,extraDetail, cartItemId, undefined, productId,product  )
     }
 }
 
