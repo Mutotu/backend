@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 declare global {
   namespace Express {
     interface Request {
-      user?: { userId: string }
+      user?: { userId: number }
     }
   }
 }
@@ -29,7 +29,7 @@ function authenticateToken(
       SECRETKEY
     ) as DecodedToken
     req.user = {
-      userId: decodedToken.userId,
+      userId: parseInt(decodedToken.userId),
     }
     next()
   } catch (err) {

@@ -25,8 +25,8 @@ CREATE TABLE "CartItem" (
     "quantity" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "extraDetail" TEXT NOT NULL,
-    "cartItemId" INTEGER NOT NULL,
-    "productId" INTEGER,
+    "cartId" INTEGER NOT NULL,
+    "productId" INTEGER NOT NULL,
 
     CONSTRAINT "CartItem_pkey" PRIMARY KEY ("id")
 );
@@ -51,7 +51,7 @@ CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartItemId_fkey" FOREIGN KEY ("cartItemId") REFERENCES "Cart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
