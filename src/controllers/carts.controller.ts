@@ -17,7 +17,7 @@ const CartsController = {
       const cart = await Cart.findLastCartByUserId(req.user!.userId)
       await CartItems.create(cart.id, productId, quantity, extraDetail)
 
-      res.status(201).json(await Cart.findLastCartByUserId)
+      res.status(201).json(await Cart.findLastCartByUserId(req.user!.userId))
       return
     } catch (e) {
       next(e)

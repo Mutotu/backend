@@ -18,11 +18,11 @@ function authenticateToken(
   res: Response,
   next: NextFunction
 ): Response<any, Record<string, any>> | undefined {
-  const token = req.header('Authorization')
+  const token = req.header('authorization')
+
   if (!token) {
     return res.status(401).json({ error: 'Access denied. Token missing' })
   }
-
   try {
     const decodedToken = jwt.verify(
       token?.split(' ')[1],
